@@ -1,0 +1,51 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: employee-access-management-system
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/eams_db
+    username: eams_user
+    password: eams_pass
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+
+# Custom app properties
+app:
+  jwt:
+    # 256-bit+ secret used to sign/verify tokens. Override via env var in real deployments.
+    secret: ${JWT_SECRET:c29tZS12ZXJ5LWxvbmctc2VjcmV0LWtleS1mb3ItaG1hYy1zaGEyNTYtc2lnbmluZy1kby1ub3QtdXNlLWluLXByb2Q=}
+    access-token-expiration-ms: 900000        # 15 minutes
+    refresh-token-expiration-ms: 604800000    # 7 days
+    issuer: employee-access-management-system
+
+  # Seeded on startup ONLY if no user with this email exists yet.
+  # Solves the chicken-and-egg problem: onboarding new users is ADMIN-only,
+  # so there must be a way to get the very first ADMIN into the system.
+  bootstrap-admin:
+    email: ${BOOTSTRAP_ADMIN_EMAIL:admin@eams.local}
+    password: ${BOOTSTRAP_ADMIN_PASSWORD:Admin@12345}
+    full-name: System Administrator
+
+logging:
+  level:
+    com.eams: INFO
+    org.springframework.security: INFO

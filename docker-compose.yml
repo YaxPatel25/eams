@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: eams-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: eams_db
+      POSTGRES_USER: eams_user
+      POSTGRES_PASSWORD: eams_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - eams-pg-data:/var/lib/postgresql/data
+
+volumes:
+  eams-pg-data:
